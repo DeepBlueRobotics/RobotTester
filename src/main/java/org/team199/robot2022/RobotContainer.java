@@ -35,15 +35,15 @@ public class RobotContainer {
     public final ArrayList<GyroPort> monitoredGyros = new ArrayList<>();
     public final ArrayList<Integer> monitoredMotorPorts = new ArrayList<>();
     public final ArrayList<Integer> monitoredDIOPorts = new ArrayList<>();
-    public final ArrayList<Integer> monitoredSolonoidPorts = new ArrayList<>();
+    public final ArrayList<Integer> monitoredSolenoidPorts = new ArrayList<>();
 
     public static final String PDP_MONITOR_PARAM = "PDP Port to Monitor: ";
     public static final String MOTOR_MONITOR_PARAM = "Motor CAN Port to Connect: ";
     public static final String ENCODER_MONITOR_PARAM_1 = "Encoder DIO Port to Connect (1): ";
     public static final String ENCODER_MONITOR_PARAM_2 = "Encoder DIO Port to Connect (2): ";
-    public static final String SOLONOID_MONITOR_PARAM_SINGLE = "Solonoid Port to Connect: ";
-    public static final String SOLONOID_MONITOR_PARAM_DOUBLE_1 = "Double Solenoid Port to Connect (1): ";
-    public static final String SOLONOID_MONITOR_PARAM_DOUBLE_2 = "Double Solenoid Port to Connect (2): ";
+    public static final String SOLENOID_MONITOR_PARAM_SINGLE = "Solenoid Port to Connect: ";
+    public static final String SOLENOID_MONITOR_PARAM_DOUBLE_1 = "Double Solenoid Port to Connect (1): ";
+    public static final String SOLENOID_MONITOR_PARAM_DOUBLE_2 = "Double Solenoid Port to Connect (2): ";
 
     public RobotContainer() {
         new Button("Restart Robot Code", () -> {
@@ -173,27 +173,27 @@ public class RobotContainer {
             SmartDashboard.putData(formatName("Encoder", port1 + ", " + port2, ""), new Encoder(port1, port2));
         });
 
-        SmartDashboard.putNumber(SOLONOID_MONITOR_PARAM_DOUBLE_1, 0);
-        SmartDashboard.putNumber(SOLONOID_MONITOR_PARAM_DOUBLE_2, 0);
-        new Button("Connect Double Solonoid", () -> {
-            int port1 = (int) SmartDashboard.getNumber(SOLONOID_MONITOR_PARAM_DOUBLE_1, 0);
-            int port2 = (int) SmartDashboard.getNumber(SOLONOID_MONITOR_PARAM_DOUBLE_2, 0);
-            if (monitoredSolonoidPorts.contains(port1) || monitoredSolonoidPorts.contains(port2))
+        SmartDashboard.putNumber(SOLENOID_MONITOR_PARAM_DOUBLE_1, 0);
+        SmartDashboard.putNumber(SOLENOID_MONITOR_PARAM_DOUBLE_2, 0);
+        new Button("Connect Double Solenoid", () -> {
+            int port1 = (int) SmartDashboard.getNumber(SOLENOID_MONITOR_PARAM_DOUBLE_1, 0);
+            int port2 = (int) SmartDashboard.getNumber(SOLENOID_MONITOR_PARAM_DOUBLE_2, 0);
+            if (monitoredSolenoidPorts.contains(port1) || monitoredSolenoidPorts.contains(port2))
                 return;
-            monitoredSolonoidPorts.add(port1);
-            monitoredSolonoidPorts.add(port2);
+            monitoredSolenoidPorts.add(port1);
+            monitoredSolenoidPorts.add(port2);
 
             SmartDashboard.putData(formatName("Double Solenoid", port1 + ", " + port2, ""),
                     new DoubleSolenoid(PneumaticsModuleType.CTREPCM, port1, port2));
         });
 
-        SmartDashboard.putNumber(SOLONOID_MONITOR_PARAM_SINGLE, 0);
-        SmartDashboard.putNumber(SOLONOID_MONITOR_PARAM_DOUBLE_2, 0);
-        new Button("Connect Double Solonoid", () -> {
-            int port = (int) SmartDashboard.getNumber(SOLONOID_MONITOR_PARAM_SINGLE, 0);
-            if (monitoredSolonoidPorts.contains(port))
+        SmartDashboard.putNumber(SOLENOID_MONITOR_PARAM_SINGLE, 0);
+        SmartDashboard.putNumber(SOLENOID_MONITOR_PARAM_DOUBLE_2, 0);
+        new Button("Connect Double Solenoid", () -> {
+            int port = (int) SmartDashboard.getNumber(SOLENOID_MONITOR_PARAM_SINGLE, 0);
+            if (monitoredSolenoidPorts.contains(port))
                 return;
-            monitoredSolonoidPorts.add(port);
+            monitoredSolenoidPorts.add(port);
 
             SmartDashboard.putData(formatName("Solenoid", port + "", ""),
                     new Solenoid(PneumaticsModuleType.CTREPCM, port));
