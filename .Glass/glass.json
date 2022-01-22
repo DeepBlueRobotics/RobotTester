@@ -1,0 +1,19 @@
+{
+  "NetworkTables": {
+    "SmartDashboard": {
+      "Track Gyroscope: Type": {
+        "open": true
+      },
+      "open": true
+    },
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
+      "/SmartDashboard/Connect Motor: Type": "String Chooser",
+      "/SmartDashboard/Track Gyroscope: Type": "String Chooser"
+    }
+  },
+  "NetworkTables Settings": {
+    "mode": "Client"
+  }
+}
