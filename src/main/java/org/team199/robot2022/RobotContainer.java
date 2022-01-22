@@ -45,7 +45,6 @@ public class RobotContainer {
     public static final String SOLONOID_MONITOR_PARAM_DOUBLE_1 = "Double Solenoid Port to Connect (1): ";
     public static final String SOLONOID_MONITOR_PARAM_DOUBLE_2 = "Double Solenoid Port to Connect (2): ";
 
-    @SuppressWarnings("unchecked")
     public RobotContainer() {
         new Button("Restart Robot Code", () -> {
             throw new RuntimeException("THIS IS A USER-TRIGGERED EVENT TO RESTART ROBOT CODE!!!");
@@ -131,32 +130,34 @@ public class RobotContainer {
                     break;
             }
             String speedName = formatName(type.toString(), "" + port, "Speed");
-            Supplier<Double> speedGetter = () -> SmartDashboard.getNumber(speedName, 0);;
+            Supplier<Double> speedGetter = () -> SmartDashboard.getNumber(speedName, 0);
+            ;
             SmartDashboard.putNumber(speedName, 0);
-            Supplier<Double>[] speedSupplier = new Supplier[] { speedGetter };
-            new EnumButton<>(formatName(type.toString(), "" + port, "Control Type"), ControlType.class, "", formatName(type.toString(), "" + port, "Control Type") + ": Change", ctrlType -> {
-                switch (ctrlType) {
-                    case LJOYX:
-                        speedSupplier[0] = lJoy::getX;
-                        break;
-                    case LJOYY:
-                        speedSupplier[0] = lJoy::getY;
-                        break;
-                    case RJOYX:
-                        speedSupplier[0] = rJoy::getX;
-                        break;
-                    case RJOYY:
-                        speedSupplier[0] = rJoy::getY;
-                        break;
-                    case VALUE:
-                        speedSupplier[0] = speedGetter;
-                        break;
-                    default:
-                        break;
-                }
-            });
+            WrappedObject<Supplier<Double>> speedSupplier = new WrappedObject<>(speedGetter);
+            new EnumButton<>(formatName(type.toString(), "" + port, "Control Type"), ControlType.class, "",
+                    formatName(type.toString(), "" + port, "Control Type") + ": Change", ctrlType -> {
+                        switch (ctrlType) {
+                            case LJOYX:
+                                speedSupplier.setObj(lJoy::getX);
+                                break;
+                            case LJOYY:
+                                speedSupplier.setObj(lJoy::getY);
+                                break;
+                            case RJOYX:
+                                speedSupplier.setObj(rJoy::getX);
+                                break;
+                            case RJOYY:
+                                speedSupplier.setObj(rJoy::getY);
+                                break;
+                            case VALUE:
+                                speedSupplier.setObj(speedGetter);
+                                break;
+                            default:
+                                break;
+                        }
+                    });
             Consumer<Double> finalSpeedSetter = speedSetter;
-            Robot.registerPeriodic(() -> finalSpeedSetter.accept(speedSupplier[0].get()));
+            Robot.registerPeriodic(() -> finalSpeedSetter.accept(speedSupplier.getObj().get()));
         });
 
         SmartDashboard.putNumber(ENCODER_MONITOR_PARAM_1, 0);
@@ -164,7 +165,8 @@ public class RobotContainer {
         new Button("Connect Encoder", () -> {
             int port1 = (int) SmartDashboard.getNumber(ENCODER_MONITOR_PARAM_1, 0);
             int port2 = (int) SmartDashboard.getNumber(ENCODER_MONITOR_PARAM_2, 0);
-            if(monitoredDIOPorts.contains(port1) || monitoredDIOPorts.contains(port2)) return;
+            if (monitoredDIOPorts.contains(port1) || monitoredDIOPorts.contains(port2))
+                return;
             monitoredDIOPorts.add(port1);
             monitoredDIOPorts.add(port2);
 
@@ -176,21 +178,25 @@ public class RobotContainer {
         new Button("Connect Double Solonoid", () -> {
             int port1 = (int) SmartDashboard.getNumber(SOLONOID_MONITOR_PARAM_DOUBLE_1, 0);
             int port2 = (int) SmartDashboard.getNumber(SOLONOID_MONITOR_PARAM_DOUBLE_2, 0);
-            if(monitoredSolonoidPorts.contains(port1) || monitoredSolonoidPorts.contains(port2)) return;
+            if (monitoredSolonoidPorts.contains(port1) || monitoredSolonoidPorts.contains(port2))
+                return;
             monitoredSolonoidPorts.add(port1);
             monitoredSolonoidPorts.add(port2);
 
-            SmartDashboard.putData(formatName("Double Solenoid", port1 + ", " + port2, ""), new DoubleSolenoid(PneumaticsModuleType.CTREPCM, port1, port2));
+            SmartDashboard.putData(formatName("Double Solenoid", port1 + ", " + port2, ""),
+                    new DoubleSolenoid(PneumaticsModuleType.CTREPCM, port1, port2));
         });
 
         SmartDashboard.putNumber(SOLONOID_MONITOR_PARAM_SINGLE, 0);
         SmartDashboard.putNumber(SOLONOID_MONITOR_PARAM_DOUBLE_2, 0);
         new Button("Connect Double Solonoid", () -> {
             int port = (int) SmartDashboard.getNumber(SOLONOID_MONITOR_PARAM_SINGLE, 0);
-            if(monitoredSolonoidPorts.contains(port)) return;
+            if (monitoredSolonoidPorts.contains(port))
+                return;
             monitoredSolonoidPorts.add(port);
 
-            SmartDashboard.putData(formatName("Solenoid", port + "", ""), new Solenoid(PneumaticsModuleType.CTREPCM, port));
+            SmartDashboard.putData(formatName("Solenoid", port + "", ""),
+                    new Solenoid(PneumaticsModuleType.CTREPCM, port));
         });
     }
 
@@ -209,7 +215,8 @@ public class RobotContainer {
     }
 
     public static String formatName(String type, String id, String function) {
-        return function.isBlank() ? String.format("%s (%s)", type, id) : String.format("%s (%s): %s", type, id, function);
+        return function.isBlank() ? String.format("%s (%s)", type, id)
+                : String.format("%s (%s): %s", type, id, function);
     }
 
     public static enum GyroPort {
